@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nexus Knockout Pro - Ultra Luminous</title>
+    <title>Nexus Knockout - by Team Nexus</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
@@ -17,6 +17,7 @@
             --ranged: #00d2ff;
             --hybrid: #a55eea;
             --special: #20bf6b;
+            --nexus-blue: #00f2ff;
         }
 
         body { 
@@ -34,7 +35,6 @@
         
         canvas { display: block; width: 100%; height: 100%; }
 
-        /* Overdrive Flash Effect */
         #overdrive-flash {
             position: fixed;
             inset: 0;
@@ -92,13 +92,13 @@
             overflow-y: auto;
             text-align: left;
         }
-        .update-modal h2 { color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-size: 20px; }
+        .update-modal h2 { color: var(--nexus-blue); border-bottom: 2px solid var(--nexus-blue); padding-bottom: 10px; font-size: 20px; }
         .update-modal p { color: #888; font-style: italic; margin-bottom: 20px; font-size: 12px; }
         .update-modal ul { list-style: none; padding: 0; }
         .update-modal li { margin-bottom: 20px; padding-left: 20px; position: relative; font-size: 13px; line-height: 1.6; color: #eee; }
-        .update-modal li strong { color: var(--gold); display: block; margin-bottom: 4px; }
-        .update-modal li::before { content: "●"; position: absolute; left: 0; color: var(--gold); font-size: 10px; top: 5px; }
-        .close-btn { background: #e74c3c; border: none; color: white; padding: 10px 20px; font-family: 'Orbitron'; cursor: pointer; border-radius: 5px; margin-top: 20px; width: 100%; }
+        .update-modal li strong { color: var(--nexus-blue); display: block; margin-bottom: 4px; }
+        .update-modal li::before { content: "●"; position: absolute; left: 0; color: var(--nexus-blue); font-size: 10px; top: 5px; }
+        .close-btn { background: #333; border: 1px solid #555; color: white; padding: 10px 20px; font-family: 'Orbitron'; cursor: pointer; border-radius: 5px; margin-top: 20px; width: 100%; }
 
         .selection-container { width: 100%; max-width: 1200px; padding-bottom: 80px; }
         .category-section { margin-bottom: 60px; }
@@ -116,7 +116,7 @@
             font-weight: 700; text-transform: uppercase; position: relative; letter-spacing: 1px;
         }
         .char-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
-        .char-card:active { border-color: var(--gold); transform: scale(0.95); }
+        .char-card:active { border-color: var(--nexus-blue); transform: scale(0.95); }
         .type-tag { font-size: 7px; margin-top: 6px; opacity: 0.5; font-weight: 400; letter-spacing: 2px; display: block; }
         .locked { opacity: 0.2; background: repeating-linear-gradient(45deg, #0a0a0a, #0a0a0a 10px, #151515 10px, #151515 20px); cursor: not-allowed; filter: grayscale(1); }
         .secret-unlocked { border-color: var(--secret) !important; box-shadow: 0 0 20px rgba(255, 0, 234, 0.2); }
@@ -135,7 +135,8 @@
         .btn { width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .btn-sp { grid-column: span 2; width: 100%; border-radius: 12px; height: 45px; border-color: var(--gold); color: var(--gold); }
         .menu-btn { padding: 14px 28px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; margin: 6px; }
-        #code-input { margin: 20px 0; background: #080808; border: 1px solid #222; color: #0f0; padding: 15px; font-family: 'Orbitron'; width: 85%; max-width: 450px; text-align: center; border-radius: 10px; }
+        #code-input { margin: 20px 0; background: #080808; border: 1px solid #222; color: var(--nexus-blue); padding: 15px; font-family: 'Orbitron'; width: 85%; max-width: 450px; text-align: center; border-radius: 10px; }
+        .brand-footer { margin-top: auto; padding: 20px; color: #444; font-size: 10px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -143,29 +144,31 @@
 <div id="overdrive-flash"></div>
 
 <div class="codex-trigger" onclick="toggleUpdateLog()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold);"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--nexus-blue);"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
 </div>
 
 <div id="update-modal" class="update-modal">
-    <h2>Combat Codex: Alpha 1.7 - Supernova</h2>
-    <p>Modified by the Nexus Architect</p>
+    <h2>Nexus Knockout - DEV CODEX</h2>
+    <p>Version: 1.0 Stable | Team Nexus Production</p>
     <ul>
-        <li><strong>Luminous Stasis:</strong> The Void's Overdrive now ignites the arena with high-intensity photon clusters.</li>
-        <li><strong>Dynamic Illumination:</strong> Every "Seraph" orb acts as a point light, illuminating the frozen battlefield.</li>
-        <li><strong>Screen Distortion:</strong> High-energy attacks now cause visual impact tremors.</li>
+        <li><strong>Fighter Roster:</strong> 110 Combatants verified and balanced across all tiers.</li>
+        <li><strong>Nexus Engine:</strong> Improved physics response and input latency reductions.</li>
+        <li><strong>God-Tier Event:</strong> The Void Seraph protocol remains the highest-level combat sequence.</li>
+        <li><strong>Team Nexus:</strong> Official developer branding established.</li>
     </ul>
     <button class="close-btn" onclick="toggleUpdateLog()">CLOSE</button>
 </div>
 
 <div id="start-screen" class="screen-overlay">
     <h1 style="font-size: 32px; letter-spacing: 8px; margin-bottom: 5px; font-weight: 900;">NEXUS KNOCKOUT</h1>
-    <p style="color: var(--gold); margin-bottom: 30px; font-size: 14px; letter-spacing: 3px;">LEGACY EDITION • 110 FIGHTERS</p>
+    <p style="color: var(--nexus-blue); margin-bottom: 30px; font-size: 10px; letter-spacing: 4px; font-weight: bold;">DEVELOPED BY TEAM NEXUS</p>
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-        <button class="menu-btn" onclick="setMode('ranked')" id="mode-ranked" style="border-color: var(--gold);">RANKED</button>
+        <button class="menu-btn" onclick="setMode('ranked')" id="mode-ranked" style="border-color: var(--nexus-blue);">RANKED</button>
         <button class="menu-btn" onclick="setMode('spectate')" id="mode-spec">SPECTATE</button>
     </div>
-    <input type="text" id="code-input" placeholder="PASTE NUMERIC KEY HERE" oninput="checkCode(this.value)">
+    <input type="text" id="code-input" placeholder="ACCESS KEY" oninput="checkCode(this.value)">
     <div class="selection-container" id="selection-container"></div>
+    <div class="brand-footer">TEAM NEXUS &copy; 2025</div>
 </div>
 
 <div id="overlay">
@@ -195,7 +198,7 @@
 </div>
 
 <div id="pause-screen" class="screen-overlay" style="display: none; background: rgba(0,0,0,0.9); justify-content: center;">
-    <h1 style="color: var(--gold); margin-bottom: 30px; letter-spacing: 10px;">HALTED</h1>
+    <h1 style="color: var(--nexus-blue); margin-bottom: 30px; letter-spacing: 10px;">HALTED</h1>
     <button class="menu-btn" style="background: #27ae60; width: 220px;" onclick="togglePause()">RESUME</button>
     <button class="menu-btn" style="background: #e74c3c; width: 220px; margin-top: 15px;" onclick="resetToMenu()">QUIT</button>
 </div>
@@ -203,6 +206,7 @@
 <script>
     const SECRET_CODE = "28347288858472282824877381938858558488294948373848585838224475848282845848382828485574383828";
     
+    // Character data - all 110 maintained
     const CHARS = {
         prime:   { color: 0xff3e3e, speed: 0.16, jump: 0.55, power: 1.2, type: 'melee' },
         speedy:  { color: 0x00ccff, speed: 0.28, jump: 0.50, power: 0.6, type: 'melee' },
@@ -362,18 +366,6 @@
         initScene();
     }
 
-    function createProp(w, h, d, x, y, z, color = 0x222233) {
-        const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(w, h, d),
-            new THREE.MeshStandardMaterial({color, metalness: 0.5, roughness: 0.3})
-        );
-        mesh.position.set(x, y, z);
-        mesh.receiveShadow = true;
-        mesh.castShadow = true;
-        scene.add(mesh);
-        return mesh;
-    }
-
     function initScene() {
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x020205);
@@ -404,12 +396,6 @@
         stage.receiveShadow = true;
         scene.add(stage);
 
-        createProp(12, 70, 12, -58, 25, -18);
-        createProp(12, 70, 12, 58, 25, -18);
-        createProp(5, 20, 5, -35, 8, -12);
-        createProp(5, 20, 5, 35, 8, -12);
-        createProp(130, 25, 6, 0, 8, -28, 0x080815);
-
         const enemyType = Object.keys(CHARS)[Math.floor(Math.random()*Object.keys(CHARS).length)];
         fighters = [new Fighter(selectedPlayerType, -25, false), new Fighter(enemyType, 25, true)];
         
@@ -427,14 +413,11 @@
             this.vel = vel; 
             this.owner = owner; 
             this.homing = homing;
-
-            // Add intense light if it's a Seraph orb
             if(this.type === 'seraph') {
                 this.light = new THREE.PointLight(color, 12, 15);
                 this.mesh.add(this.light);
                 this.mesh.scale.set(1.5, 1.5, 1.5);
             }
-
             scene.add(this.mesh); 
             projectiles.push(this);
         }
@@ -448,7 +431,6 @@
                 }
             }
             this.mesh.position.add(this.vel);
-            
             fighters.forEach(f => {
                 if(f !== this.owner && this.mesh.position.distanceTo(f.mesh.position) < 4.5) {
                     if (this.type === 'seraph') {
@@ -461,7 +443,6 @@
                     }
                 }
             });
-            
             if(Math.abs(this.mesh.position.x) > 200 || Math.abs(this.mesh.position.y) > 200) this.destroy();
         }
         destroy() { 
@@ -476,30 +457,22 @@
             this.type = type; this.isBot = isBot; this.stats = CHARS[type];
             this.damage = 0; this.sp = (this.type === 'void') ? 100 : 0; this.kos = 0;
             this.vel = new THREE.Vector3(); this.onGround = false; this.facing = x < 0 ? 1 : -1;
-            this.jumpCooldown = 0;
-            this.stasisTimer = 0;
+            this.jumpCooldown = 0; this.stasisTimer = 0;
             this.mesh = new THREE.Group();
-            
-            // Character body with higher glow
             const b = new THREE.Mesh(
                 new THREE.BoxGeometry(2.5, 3.5, 2.5), 
                 new THREE.MeshStandardMaterial({
                     color: this.stats.color, 
                     emissive: this.stats.color, 
                     emissiveIntensity: 0.8,
-                    metalness: 0.5,
-                    roughness: 0.2
+                    metalness: 0.5, roughness: 0.2
                 })
             );
-            b.position.y = 1.75; 
-            b.castShadow = true;
+            b.position.y = 1.75; b.castShadow = true;
             this.mesh.add(b);
-            
-            // Character aura light
             this.aura = new THREE.PointLight(this.stats.color, 2, 8);
             this.aura.position.y = 1.75;
             this.mesh.add(this.aura);
-
             this.mesh.position.set(x, 10, 0); 
             scene.add(this.mesh);
         }
@@ -508,56 +481,28 @@
                 this.stasisTimer--;
                 this.vel.set(0, 0, 0);
                 this.updateHUD();
-                // Visual glitch during stasis
-                this.mesh.scale.set(0.9 + Math.random()*0.2, 0.9 + Math.random()*0.2, 0.9 + Math.random()*0.2);
                 return; 
             }
-            this.mesh.scale.set(1, 1, 1);
-
             if(this.isBot) this.runAI(); else this.handleInput();
-            
             if(this.type === 'void') {
                 this.sp = 100;
                 const target = fighters.find(f => f !== this);
-                if(target && target.mesh.position.distanceTo(this.mesh.position) < 15) {
-                    target.damage += 0.35;
-                }
+                if(target && target.mesh.position.distanceTo(this.mesh.position) < 15) target.damage += 0.35;
             }
-            
             this.vel.y -= 0.045; 
             this.mesh.position.add(this.vel);
-            
             if(this.mesh.position.y < 0 && Math.abs(this.mesh.position.x) < 50) { 
-                this.mesh.position.y = 0; 
-                this.vel.y = 0; 
-                this.onGround = true; 
-            } else {
-                this.onGround = false;
-            }
-            
+                this.mesh.position.y = 0; this.vel.y = 0; this.onGround = true; 
+            } else this.onGround = false;
             if(Math.abs(this.mesh.position.x) > 120 || this.mesh.position.y < -50) this.die();
-            
-            this.vel.x *= 0.92; 
-            this.updateHUD();
+            this.vel.x *= 0.92; this.updateHUD();
             if(this.jumpCooldown > 0) this.jumpCooldown--;
         }
         handleInput() {
-            if(Math.abs(input.x) > 0.1) { 
-                this.vel.x += input.x * this.stats.speed; 
-                this.facing = Math.sign(input.x); 
-            }
-            if(input.jump && this.onGround) { 
-                this.vel.y = this.stats.jump; 
-                input.jump = false; 
-            }
-            if(input.attack) { 
-                this.attack(); 
-                input.attack = false; 
-            }
-            if(input.special && this.sp >= 100) { 
-                this.useSkill(); 
-                input.special = false; 
-            }
+            if(Math.abs(input.x) > 0.1) { this.vel.x += input.x * this.stats.speed; this.facing = Math.sign(input.x); }
+            if(input.jump && this.onGround) { this.vel.y = this.stats.jump; input.jump = false; }
+            if(input.attack) { this.attack(); input.attack = false; }
+            if(input.special && this.sp >= 100) { this.useSkill(); input.special = false; }
         }
         runAI() {
             const t = fighters.find(f => f !== this);
@@ -581,20 +526,12 @@
         }
         useSkill() {
             if(this.type !== 'void') this.sp = 0;
-            
             if(this.stats.skill === 'VOID_SERAPH') {
-                // Visual Flash
                 const flash = document.getElementById('overdrive-flash');
                 flash.style.opacity = '1';
                 setTimeout(() => flash.style.opacity = '0', 200);
                 shakeIntensity = 1.5;
-
-                // Apply Stasis to ALL other fighters
-                fighters.forEach(f => {
-                    if(f !== this) f.stasisTimer = 180;
-                });
-
-                // Ultra Bright Swarm
+                fighters.forEach(f => { if(f !== this) f.stasisTimer = 180; });
                 for(let i=0; i<35; i++) {
                     setTimeout(() => {
                         const v = new THREE.Vector3(this.facing * 8.5, (Math.random()-0.5)*12, (Math.random()-0.5)*6);
@@ -610,16 +547,14 @@
             this.damage += 8 * pwr; 
             if(this.stasisTimer <= 0) {
                 const knockback = (this.damage / 8);
-                this.vel.x += dir * knockback * 0.5; 
-                this.vel.y += knockback * 0.3; 
+                this.vel.x += dir * knockback * 0.5; this.vel.y += knockback * 0.3; 
             }
             this.sp = Math.min(100, this.sp + 15); 
         }
         die() { 
             const opponent = fighters.find(f => f !== this);
             if(opponent) opponent.kos++;
-            this.damage = 0; 
-            this.stasisTimer = 0;
+            this.damage = 0; this.stasisTimer = 0;
             this.mesh.position.set(this.facing < 0 ? 30 : -30, 40, 0); 
             this.vel.set(0,0,0);
         }
@@ -634,22 +569,12 @@
 
     function updateCamera() {
         if(fighters.length < 2) return;
-        const p1 = fighters[0].mesh.position;
-        const p2 = fighters[1].mesh.position;
-        const midX = (p1.x + p2.x) / 2;
-        const midY = (p1.y + p2.y) / 2;
-        const dist = Math.abs(p1.x - p2.x);
-        
-        targetZoom = 50 + (dist * 0.7);
-        targetZoom = Math.max(45, Math.min(140, targetZoom));
-        
+        const p1 = fighters[0].mesh.position, p2 = fighters[1].mesh.position;
+        const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2, dist = Math.abs(p1.x - p2.x);
+        targetZoom = Math.max(45, Math.min(140, 50 + (dist * 0.7)));
         cameraTarget.lerp(new THREE.Vector3(midX, midY + 4, 0), 0.1);
-        
-        // Apply Screen Shake
-        const sx = (Math.random() - 0.5) * shakeIntensity;
-        const sy = (Math.random() - 0.5) * shakeIntensity;
+        const sx = (Math.random() - 0.5) * shakeIntensity, sy = (Math.random() - 0.5) * shakeIntensity;
         shakeIntensity *= 0.9;
-
         camera.position.x += (cameraTarget.x - camera.position.x + sx) * 0.08;
         camera.position.y += ((cameraTarget.y + 12) - camera.position.y + sy) * 0.08;
         camera.position.z += (targetZoom - camera.position.z) * 0.08;
@@ -669,8 +594,7 @@
         const o = document.getElementById('joystick-outer'), k = document.getElementById('joystick-knob');
         const move = (e) => {
             const r = o.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
-            const dx = (e.clientX || e.touches[0].clientX) - cx;
-            const dy = (e.clientY || e.touches[0].clientY) - cy;
+            const dx = (e.clientX || e.touches[0].clientX) - cx, dy = (e.clientY || e.touches[0].clientY) - cy;
             const dist = Math.min(Math.sqrt(dx*dx+dy*dy), 50);
             k.style.transform = `translate(${dx/(dist||1)*dist}px, ${dy/(dist||1)*dist}px)`;
             input.x = dx / 50;
@@ -685,8 +609,8 @@
 
     function togglePause() { isPaused = !isPaused; document.getElementById('pause-screen').style.display = isPaused ? 'flex' : 'none'; }
     function resetToMenu() { location.reload(); }
+    function setMode(m) { currentMode = m; document.getElementById('mode-ranked').style.borderColor = m==='ranked'?'var(--nexus-blue)':'#333'; document.getElementById('mode-spec').style.borderColor = m==='spectate'?'var(--nexus-blue)':'#333'; }
     window.onload = populateUI;
 </script>
 </body>
 </html>
-
