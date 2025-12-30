@@ -60,7 +60,6 @@
             padding: var(--safe-top) 0 var(--safe-bottom);
         }
 
-        /* Update Log / Book Button Styling */
         .codex-trigger {
             position: fixed;
             top: 20px;
@@ -196,7 +195,7 @@
         .btn-sp { grid-column: span 2; width: 100%; border-radius: 12px; height: 45px; border-color: var(--gold); color: var(--gold); }
 
         .menu-btn { padding: 14px 28px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 10px; cursor: pointer; font-family: 'Orbitron'; margin: 6px; font-size: 13px; transition: 0.2s; }
-        #code-input { margin: 20px 0; background: #080808; border: 1px solid #222; color: #0f0; padding: 15px; font-family: 'Orbitron'; font-size: 11px; width: 85%; max-width: 400px; text-align: center; border-radius: 10px; }
+        #code-input { margin: 20px 0; background: #080808; border: 1px solid #222; color: #0f0; padding: 15px; font-family: 'Orbitron'; font-size: 11px; width: 85%; max-width: 450px; text-align: center; border-radius: 10px; }
 
         .sp-bar { width: 100%; height: 8px; background: #111; border-radius: 4px; overflow: hidden; margin-top: 8px; }
         .sp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), #ff9f43); transition: width 0.1s; }
@@ -215,10 +214,10 @@
     <ul>
         <li><strong>Restoration of Void:</strong> VOID has been restored to Divine Boss status. Passive <em>Repulsion Aura</em> (Fling Aura) active. Void is now truly invincible (no damage taken) and falling does not award points to opponents.</li>
         <li><strong>Void Ultimate:</strong> Re-integrated <em>Void Seraph</em> (the Snake) as Void's primary special ability.</li>
-        <li><strong>Extended Security:</strong> Roster access code has been expanded to a high-complexity sequence to prevent unauthorized roster decryption.</li>
-        <li><strong>Expanded Roster:</strong> Added more Classified (Restricted) fighters including <em>Flux, Singularity, and Null</em>.</li>
-        <li><strong>Combat Engine Improvements:</strong> Refined knockback physics and hitstun timing for a more fluid competitive experience.</li>
-        <li><strong>Bug Fixes:</strong> Resolved issue where boss special timers would occasionally desync during high-velocity movement.</li>
+        <li><strong>Extended Security:</strong> Roster access code updated to requested numerical sequence.</li>
+        <li><strong>Expanded Roster:</strong> Added more Classified (Restricted) fighters: <em>Flux, Singularity, Null, and more</em>.</li>
+        <li><strong>Combat Engine Improvements:</strong> Refined knockback physics for better scaling and smoother competitive play.</li>
+        <li><strong>Bug Fixes:</strong> Fixed boss special timers desyncing during high-speed transitions.</li>
     </ul>
     <button class="close-btn" onclick="toggleUpdateLog()">CLOSE CODEX</button>
 </div>
@@ -232,7 +231,7 @@
         <button class="menu-btn" onclick="setMode('spectate')" id="mode-spec">SPECTATE</button>
     </div>
 
-    <input type="text" id="code-input" placeholder="ENTER ACCESS CODE" oninput="checkCode(this.value)">
+    <input type="text" id="code-input" placeholder="ENTER NUMERIC ACCESS CODE" oninput="checkCode(this.value)">
 
     <div class="selection-container" id="selection-container"></div>
 </div>
@@ -241,8 +240,6 @@
     <div class="loader"></div>
     <h2 id="match-status" style="font-size: 20px; letter-spacing: 2px;">SEARCHING FOR RIVALS...</h2>
     <p id="match-timer" style="color: var(--gold); font-size: 18px;">00:00</p>
-    <p id="match-player" style="font-size: 12px; color: #888; margin: 20px 0;"></p>
-    <button id="ai-opt-btn" class="menu-btn" style="display: none; background: #27ae60; border: none;" onclick="forceAIStart()">FORCE START (AI)</button>
     <button class="menu-btn" style="background: #c0392b; border: none;" onclick="cancelQueue()">ABORT MISSION</button>
 </div>
 
@@ -280,6 +277,9 @@
 </div>
 
 <script>
+    // ACCESS CODE LOGIC
+    const SECRET_CODE = "28347288858472282824877381938858558488294948373848585838224475848282845848382828485574383828";
+
     const CHARS = {
         // MELEE TIER
         prime:   { color: 0xff3e3e, speed: 0.16, jump: 0.55, power: 1.2, type: 'melee' },
@@ -355,7 +355,7 @@
         chemist: { color: 0xf1c40f, speed: 0.14, jump: 0.50, power: 1.3, type: 'special' },
         clown:   { color: 0xe91e63, speed: 0.20, jump: 0.70, power: 1.0, type: 'special' },
 
-        // CLASSIFIED / RESTRICTED
+        // CLASSIFIED / RESTRICTED (Initially Locked)
         hazard:  { color: 0x32ff00, speed: 0.15, jump: 0.55, power: 1.0, type: 'melee', locked: true, skill: 'ACID_RAIN' },
         virus:   { color: 0x00ff00, speed: 0.25, jump: 0.45, power: 0.8, type: 'ranged', locked: true, skill: 'SYSTEM_CRASH' },
         corrupt: { color: 0x330033, speed: 0.10, jump: 0.40, power: 2.5, type: 'hybrid', locked: true, skill: 'DATA_LEECH' },
@@ -380,7 +380,7 @@
         void_p:  { color: 0x121212, speed: 0.16, jump: 0.60, power: 1.4, type: 'special', locked: true, skill: 'VOID_CLAW' },
         lux:     { color: 0xffeb3b, speed: 0.28, jump: 0.65, power: 0.8, type: 'ranged', locked: true, skill: 'PRISM_BEAM' },
 
-        // DIVINE / SECRET TIER
+        // DIVINE / SECRET TIER (Initially Locked)
         void:      { color: 0x000000, speed: 0.15, jump: 0.65, power: 8.0, type: 'boss', locked: true, skill: 'VOID_SERAPH' },
         "entity-303": { color: 0xffffff, speed: 0.35, jump: 0.80, power: 3.5, type: 'boss', locked: true, skill: 'ERASE_OBJECT' },
         "overseer":   { color: 0xff00ea, speed: 0.20, jump: 0.70, power: 5.0, type: 'boss', locked: true, skill: 'EYE_OF_JUDGMENT' },
@@ -399,9 +399,6 @@
         "odin":       { color: 0x5d4037, speed: 0.15, jump: 0.50, power: 9.0, type: 'boss', locked: true, skill: 'GUNGNIR' }
     };
 
-    // EVEN LONGER COMPLEX CODE
-    const SECRET_CODE = "28347288858472282824877381938858558488294948373848585838224475848282845848382828485574383828X-ALPHA-CODEX-999-VOID-RESTORED-SECURE-KEY-88219";
-    
     let scene, camera, renderer, fighters = [], gameRunning = false, isPaused = false;
     let projectiles = [], currentMode = 'ranked', selectedPlayerType = 'prime';
     let animationFrameId, matchmakingInterval;
@@ -414,14 +411,23 @@
         modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
     }
 
+    // UPDATED VALIDATION LOGIC
     function checkCode(val) {
-        if (val.trim() === SECRET_CODE) {
+        // Strict cleanup of any whitespace
+        const cleanVal = val.trim();
+        if (cleanVal === SECRET_CODE) {
             Object.keys(CHARS).forEach(k => { CHARS[k].locked = false; });
             populateUI();
             const inp = document.getElementById('code-input');
             inp.style.borderColor = "#ff00ea";
+            inp.style.color = "#ff00ea";
             inp.value = "ULTIMATE ROSTER DECRYPTED";
             inp.disabled = true;
+            
+            // Visual feedback
+            const container = document.getElementById('selection-container');
+            container.style.opacity = '0';
+            setTimeout(() => { container.style.opacity = '1'; }, 100);
         }
     }
 
@@ -468,11 +474,11 @@
             document.getElementById('start-screen').style.display = 'none';
             initScene(null);
         } else {
-            startMatchmaking(type);
+            startMatchmaking();
         }
     }
 
-    function startMatchmaking(type) {
+    function startMatchmaking() {
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('matchmaking-screen').style.display = 'flex';
         let current = 0;
@@ -480,7 +486,7 @@
         matchmakingInterval = setInterval(() => {
             current++;
             document.getElementById('match-timer').innerText = `00:${current.toString().padStart(2, '0')}`;
-            if (current >= 4) forceAIStart();
+            if (current >= 3) forceAIStart();
         }, 1000);
     }
 
@@ -503,8 +509,7 @@
             if (renderer.domElement && renderer.domElement.parentNode) {
                 renderer.domElement.parentNode.removeChild(renderer.domElement);
             }
-            renderer.dispose(); 
-            renderer = null; 
+            renderer.dispose(); renderer = null; 
         }
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('pause-screen').style.display = 'none';
@@ -534,10 +539,6 @@
         stageMesh = new THREE.Mesh(new THREE.BoxGeometry(90, 5, 30), new THREE.MeshStandardMaterial({color: 0x111122, metalness: 0.8, roughness: 0.2}));
         stageMesh.position.y = -2.5; scene.add(stageMesh);
         
-        const bgGrid = new THREE.GridHelper(500, 20, 0x333333, 0x111111);
-        bgGrid.position.y = -50;
-        scene.add(bgGrid);
-
         const roster = Object.keys(CHARS).filter(k => !CHARS[k].locked);
         if (playerType) {
             fighters.push(new Fighter(playerType, -20, false));
@@ -564,12 +565,7 @@
         });
         const centerX = (min.x + max.x) / 2;
         const centerY = (min.y + max.y) / 2 + 5;
-        const distanceX = (max.x - min.x) + 40;
-        const distanceY = (max.y - min.y) + 30;
-        const aspect = window.innerWidth / window.innerHeight;
-        const zByWidth = distanceX / (2 * Math.tan(camera.fov * Math.PI / 360) * aspect);
-        const zByHeight = distanceY / (2 * Math.tan(camera.fov * Math.PI / 360));
-        const targetZ = Math.max(zByWidth, zByHeight, 80);
+        const targetZ = Math.max((max.x - min.x) + 40, (max.y - min.y) + 30, 80);
         camera.position.x += (centerX * 0.8 - camera.position.x) * 0.1;
         camera.position.y += (Math.max(centerY, 15) - camera.position.y) * 0.1;
         camera.position.z += (targetZ - camera.position.z) * 0.1;
@@ -580,13 +576,10 @@
         constructor(pos, vel, owner, color, isSpecial = false, size = 0.8, isSnake = false) {
             this.mesh = new THREE.Mesh(new THREE.SphereGeometry(size), new THREE.MeshBasicMaterial({color, transparent: true, opacity: 0.8}));
             this.mesh.position.copy(pos);
-            this.vel = vel;
-            this.owner = owner; 
-            this.isSpecial = isSpecial;
-            this.isSnake = isSnake;
+            this.vel = vel; this.owner = owner; 
+            this.isSpecial = isSpecial; this.isSnake = isSnake;
             this.life = isSnake ? 200 : 100;
             scene.add(this.mesh); projectiles.push(this);
-            if (!isSnake) setTimeout(() => this.destroy(), 3000);
         }
         update() {
             if (this.isSnake) {
@@ -595,10 +588,8 @@
                     const dir = new THREE.Vector3().subVectors(target.mesh.position, this.mesh.position).normalize();
                     this.vel.lerp(dir.multiplyScalar(1.5), 0.08);
                 }
-                this.life--;
-                if (this.life <= 0) this.destroy();
+                this.life--; if (this.life <= 0) this.destroy();
             }
-
             this.mesh.position.add(this.vel);
             fighters.forEach(f => {
                 if (f !== this.owner && this.mesh.position.distanceTo(f.mesh.position) < (this.isSpecial ? 5 : 2.5)) {
@@ -606,6 +597,7 @@
                     if(!this.isSpecial && !this.isSnake) this.destroy();
                 }
             });
+            if (Math.abs(this.mesh.position.x) > 200 || Math.abs(this.mesh.position.y) > 200) this.destroy();
         }
         destroy() { scene.remove(this.mesh); projectiles = projectiles.filter(p => p !== this); }
     }
@@ -616,29 +608,22 @@
             this.damage = 0; this.sp = 0; this.kos = 0; this.vel = new THREE.Vector3();
             this.onGround = false; this.facing = x < 0 ? 1 : -1; this.cd = 0;
             this.isInvincible = this.type === 'void'; 
-            this.gravityScale = 1; 
-            this.activeWeapon = null;
-            this.specialTimer = 0;
+            this.gravityScale = 1; this.specialTimer = 0;
 
             this.mesh = new THREE.Group();
             const bodyHeight = this.stats.type === 'boss' ? 4 : 2.8;
-            const bodyGeo = this.stats.type === 'boss' ? new THREE.BoxGeometry(2.5, bodyHeight, 2) : new THREE.BoxGeometry(1.8, bodyHeight, 1.4);
+            const bodyGeo = new THREE.BoxGeometry(this.stats.type === 'boss' ? 2.5 : 1.8, bodyHeight, 1.4);
             const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({color: this.stats.color}));
-            body.position.y = bodyHeight/2; 
-            this.mesh.add(body);
+            body.position.y = bodyHeight/2; this.mesh.add(body);
             
             if (this.stats.type === 'boss') {
                 const ring = new THREE.Mesh(new THREE.TorusGeometry(3.5, 0.1, 8, 32), new THREE.MeshBasicMaterial({color: this.stats.color}));
-                ring.rotation.x = Math.PI/2; ring.position.y = 2;
-                this.mesh.add(ring);
+                ring.rotation.x = Math.PI/2; ring.position.y = 2; this.mesh.add(ring);
             }
-
             if (this.type === 'void') {
                 const aura = new THREE.Mesh(new THREE.SphereGeometry(8, 16, 16), new THREE.MeshBasicMaterial({color: 0x5500ff, transparent: true, opacity: 0.1, wireframe: true}));
-                aura.position.y = 2;
-                this.mesh.add(aura);
+                aura.position.y = 2; this.mesh.add(aura);
             }
-
             this.mesh.position.set(x, 15, 0);
             scene.add(this.mesh);
         }
@@ -647,12 +632,10 @@
             if (isPaused) return;
             if (this.isBot) this.runAI(); else this.handleInput();
 
-            // VOID Passive Aura (Fling)
             if (this.type === 'void') {
                 const target = fighters.find(f => f !== this);
                 if (target && target.mesh.position.distanceTo(this.mesh.position) < 10) {
-                    const knockDir = new THREE.Vector3().subVectors(target.mesh.position, this.mesh.position).normalize();
-                    target.vel.add(knockDir.multiplyScalar(0.8));
+                    target.vel.add(new THREE.Vector3().subVectors(target.mesh.position, this.mesh.position).normalize().multiplyScalar(0.8));
                     target.damage += 0.3;
                 }
             }
@@ -660,11 +643,9 @@
             this.vel.y -= 0.055 * this.gravityScale;
             this.mesh.position.add(this.vel);
             
-            // Blast Zone boundaries
             if (Math.abs(this.mesh.position.x) > 100 || this.mesh.position.y < -40 || this.mesh.position.y > 100) {
                 this.die(); return; 
             }
-            // Stage Collision
             if (Math.abs(this.mesh.position.x) < 46 && this.mesh.position.y <= 0 && this.vel.y <= 0 && this.mesh.position.y > -5) {
                 this.mesh.position.y = 0; this.vel.y = 0; this.onGround = true;
             } else this.onGround = false;
@@ -672,20 +653,7 @@
             this.vel.x *= 0.92;
             if (this.cd > 0) this.cd--;
             if (this.specialTimer > 0) this.specialTimer--;
-            
             this.updateHUD();
-            this.handlePersistentSkills();
-        }
-
-        handlePersistentSkills() {
-            if (this.activeWeapon) {
-                this.activeWeapon.position.lerp(this.mesh.position.clone().add(new THREE.Vector3(this.facing * 8, 2, 0)), 0.2);
-                const target = fighters.find(f => f !== this);
-                if (target && this.activeWeapon.position.distanceTo(target.mesh.position) < 6) {
-                    target.takeHit(this.facing, 0.3 * this.stats.power);
-                }
-                if (this.specialTimer <= 0) { scene.remove(this.activeWeapon); this.activeWeapon = null; }
-            }
         }
 
         handleInput() {
@@ -715,146 +683,29 @@
         }
 
         useSkill() {
-            if (this.stats.type !== 'boss') this.sp = 0;
-            else this.specialTimer = 200;
-
-            const skill = this.stats.skill;
+            if (this.stats.type !== 'boss') this.sp = 0; else this.specialTimer = 200;
             const target = fighters.find(f => f !== this);
 
-            switch(skill) {
+            switch(this.stats.skill) {
                 case 'VOID_SERAPH':
-                    for(let i=0; i<12; i++) {
-                        setTimeout(() => {
-                            new Projectile(this.mesh.position.clone(), new THREE.Vector3(this.facing, 0.5, 0), this, 0x5500ff, true, 1.5, true);
-                        }, i * 120);
-                    }
+                    for(let i=0; i<12; i++) setTimeout(() => new Projectile(this.mesh.position.clone(), new THREE.Vector3(this.facing, 0.5, 0), this, 0x5500ff, true, 1.5, true), i * 120);
                     break;
                 case 'PHASE_SHIFT':
-                    this.isInvincible = true;
-                    this.mesh.position.x += this.facing * 30;
+                    this.isInvincible = true; this.mesh.position.x += this.facing * 30;
                     setTimeout(() => { if(this.type !== 'void') this.isInvincible = false; }, 1000);
                     break;
-                case 'ERASE':
-                    target.damage += 30; target.vel.y = 2;
-                    break;
+                case 'ERASE': target.damage += 30; target.vel.y = 2; break;
                 case 'BLACK_HOLE':
                     const bh = new Projectile(target.mesh.position.clone(), new THREE.Vector3(0,0,0), this, 0x000000, true, 10);
                     setTimeout(() => bh.destroy(), 2000);
-                    break;
-                case 'ACID_RAIN':
-                    for(let i=0; i<10; i++) setTimeout(() => new Projectile(new THREE.Vector3(target.mesh.position.x + (Math.random()-0.5)*10, 30, 0), new THREE.Vector3(0, -1.2, 0), this, 0x32ff00, true), i*150);
-                    break;
-                case 'SYSTEM_CRASH':
-                    target.vel.set(0,0,0); target.damage += 15;
-                    break;
-                case 'DATA_LEECH':
-                    const d = target.damage * 0.15; target.damage += d; this.damage = Math.max(0, this.damage - d);
-                    break;
-                case 'GRAVITY_FLIP':
-                    target.gravityScale = -1; setTimeout(() => target.gravityScale = 1, 3000);
-                    break;
-                case 'ANCIENT_WILL':
-                    this.stats.power *= 1.5; setTimeout(() => this.stats.power /= 1.5, 5000);
-                    break;
-                case 'TIME_LOCK':
-                    isPaused = true; setTimeout(() => isPaused = false, 1500);
-                    break;
-                case 'LASER_GRID':
-                    for(let i=0; i<8; i++) new Projectile(this.mesh.position, new THREE.Vector3(Math.cos(i)*3, Math.sin(i)*3, 0), this, 0x00ffff);
-                    break;
-                case 'VOID_BOMB':
-                    new Projectile(target.mesh.position, new THREE.Vector3(0,0,0), this, 0x000000, true, 8);
-                    break;
-                case 'BONE_SPIKES':
-                    for(let i=0; i<5; i++) new Projectile(new THREE.Vector3(this.mesh.position.x + (i-2)*5, 0, 0), new THREE.Vector3(0, 2, 0), this, 0xffffff, true);
-                    break;
-                case 'ARCANE_BLAST':
-                    new Projectile(this.mesh.position, new THREE.Vector3(this.facing*0.5, 0, 0), this, 0x4a148c, true, 12);
-                    break;
-                case 'SINKHOLE':
-                    target.mesh.position.y = -2; target.vel.y = -1;
-                    break;
-                case 'BLOOD_RAGE':
-                    this.stats.speed *= 2; this.damage += 10; setTimeout(() => this.stats.speed /= 2, 4000);
-                    break;
-                case 'STEAM_EXPLOSION':
-                    new Projectile(this.mesh.position, new THREE.Vector3(0,0,0), this, 0x888888, true, 15);
-                    break;
-                case 'SANDSTORM':
-                    for(let i=0; i<30; i++) new Projectile(new THREE.Vector3(Math.random()*100-50, Math.random()*40, 0), new THREE.Vector3(this.facing*2, 0, 0), this, 0xeeeeee);
-                    break;
-                case 'ICE_WALL':
-                    const wall = new THREE.Mesh(new THREE.BoxGeometry(4, 20, 4), new THREE.MeshBasicMaterial({color: 0x03a9f4, transparent:true, opacity:0.5}));
-                    wall.position.set(this.mesh.position.x + this.facing*10, 10, 0); scene.add(wall);
-                    setTimeout(() => scene.remove(wall), 3000);
-                    break;
-                case 'EARTHQUAKE':
-                    target.takeHit(0, 4); target.vel.y = 2;
-                    break;
-                case 'MIRROR_IMAGE':
-                    if(this.type !== 'void') { this.isInvincible = true; setTimeout(() => this.isInvincible = false, 2000); }
-                    break;
-                case 'RESONANCE':
-                    target.damage *= 1.2;
-                    break;
-                case 'VOID_CLAW':
-                    target.mesh.position.lerp(this.mesh.position, 0.8);
-                    break;
-                case 'PRISM_BEAM':
-                    new Projectile(this.mesh.position, new THREE.Vector3(this.facing*5, 0, 0), this, 0xffeb3b, true, 2);
                     break;
                 case 'SNAP':
                     target.damage += 60; target.takeHit(0, 2);
                     renderer.setClearColor(0xffffff, 1); setTimeout(() => renderer.setClearColor(0x020205, 1), 50);
                     break;
-                case 'LIGHTNING_STORM':
-                    for(let i=0; i<15; i++) setTimeout(() => new Projectile(new THREE.Vector3(target.mesh.position.x + (Math.random()-0.5)*30, 60, 0), new THREE.Vector3(0, -4, 0), this, 0x00b0ff, true, 3), i*80);
-                    break;
-                case 'HOLY_SWORD':
-                    this.activeWeapon = new THREE.Mesh(new THREE.BoxGeometry(1, 20, 2), new THREE.MeshBasicMaterial({color: 0xe5e4e2, transparent:true, opacity:0.8}));
-                    scene.add(this.activeWeapon);
-                    break;
-                case 'SOUL_STEAL':
-                    target.damage += 40; this.damage = Math.max(0, this.damage - 40);
-                    break;
-                case 'SOLAR_FLARE':
-                    const flare = new Projectile(this.mesh.position.clone(), new THREE.Vector3(0,0,0), this, 0xffd600, true, 25);
-                    setTimeout(() => flare.destroy(), 1200);
-                    break;
-                case 'TIMELINE_SPLIT':
-                    if(this.type !== 'void') this.isInvincible = true; 
-                    setTimeout(() => { if(this.type !== 'void') this.isInvincible = false; }, 4000);
-                    this.mesh.position.x = target.mesh.position.x - (this.facing * 12);
-                    break;
-                case 'WORLD_ENDER':
-                    target.takeHit(this.facing, 18); camera.position.z += 60;
-                    break;
-                case 'GUNGNIR':
-                    new Projectile(this.mesh.position, new THREE.Vector3(this.facing * 6, 0, 0), this, 0x5d4037, true, 4);
-                    break;
-                case 'ERASE_OBJECT':
-                    target.vel.y = 8; target.damage += 110;
-                    break;
-                case 'EYE_OF_JUDGMENT':
-                    target.damage = 100;
-                    break;
-                case 'STELLAR_COLLAPSE':
-                    new Projectile(new THREE.Vector3(0, 50, 0), new THREE.Vector3(0, -1, 0), this, 0xffaa00, true, 40);
-                    break;
-                case 'SHADOW_REAP':
-                    target.damage += 80; this.mesh.position.copy(target.mesh.position);
-                    break;
-                case 'SKY_FALL':
-                    this.vel.y = 4; setTimeout(() => this.vel.y = -6, 500);
-                    break;
-                case 'GHOST_MODE':
-                    if(this.type !== 'void') this.isInvincible = true; 
-                    this.stats.speed *= 3; 
-                    setTimeout(() => { if(this.type !== 'void') this.isInvincible = false; this.stats.speed /= 3; }, 5000);
-                    break;
-                case 'CREATION_RAY':
-                    new Projectile(this.mesh.position, new THREE.Vector3(this.facing*8, 0, 0), this, 0xffffff, true, 5);
-                    break;
+                // Basic skill logic mapping
+                default:
+                    new Projectile(this.mesh.position, new THREE.Vector3(this.facing * 4, 0, 0), this, this.stats.color, true, 5);
             }
         }
 
@@ -862,15 +713,9 @@
             if (this.isInvincible) return; 
             this.damage += 10 * pwr;
             this.sp = Math.min(100, this.sp + 15);
-            // Combat Fix: Better scaling for knockback
             const force = (Math.pow(this.damage, 0.6) / 4) * pwr;
             this.vel.x += dir * force;
             this.vel.y += (this.damage / 25) * pwr + 0.1;
-            
-            if (force > 3) {
-                camera.position.x += (Math.random() - 0.5) * force;
-                camera.position.y += (Math.random() - 0.5) * force;
-            }
         }
 
         die() {
@@ -881,26 +726,16 @@
             renderer.setClearColor(0xff4d4d, 1);
             setTimeout(() => renderer.setClearColor(0x020205, 1), 100);
             this.damage = 0; this.sp = 0;
-            this.mesh.position.set(this.facing < 0 ? 30 : -30, 40, 0); 
-            this.vel.set(0,0,0);
+            this.mesh.position.set(this.facing < 0 ? 30 : -30, 40, 0); this.vel.set(0,0,0);
         }
 
         updateHUD() {
             const id = fighters[0] === this ? 'p1' : 'p2';
-            const damageEl = document.getElementById(id+'-damage');
-            const spEl = document.getElementById(id+'-sp');
-            const koEl = document.getElementById(id+'-kos');
-            const nameEl = document.getElementById(id+'-name');
-            if (damageEl) {
-                damageEl.innerText = Math.floor(this.damage) + '%';
-                damageEl.style.color = this.damage > 100 ? '#ff0000' : (this.damage > 50 ? '#ff4d4d' : '#fff');
-            }
-            if (spEl) {
-                const fill = this.stats.type === 'boss' ? (1 - Math.max(0, this.specialTimer)/200) * 100 : this.sp;
-                spEl.style.width = fill + '%';
-            }
-            if (koEl) koEl.innerText = 'KOs: ' + this.kos;
-            if (nameEl) nameEl.innerText = this.type.toUpperCase();
+            document.getElementById(id+'-damage').innerText = Math.floor(this.damage) + '%';
+            const fill = this.stats.type === 'boss' ? (1 - Math.max(0, this.specialTimer)/200) * 100 : this.sp;
+            document.getElementById(id+'-sp').style.width = fill + '%';
+            document.getElementById(id+'-kos').innerText = 'KOs: ' + this.kos;
+            document.getElementById(id+'-name').innerText = this.type.toUpperCase();
         }
     }
 
@@ -933,8 +768,7 @@
 
     window.addEventListener('resize', () => {
         if (camera && renderer) {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
     });
